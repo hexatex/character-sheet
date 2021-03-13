@@ -3,30 +3,16 @@
 /**
  * Class Character
  * https://www.d12dungeonchronicles.com/post/dnd-5ed-character-sheets-fully-explained
- * I stopped last in the "Armor Class (AC):" section of the link above^
  */
 class Character extends Model
 {
+    const ARMOR_CLASS = 10;
+
     /** @var string|null */
     protected $name;
 
-    /** @var int **/
-    protected $strength = 0;
-
-    /** @var int **/
-    protected $dexterity = 0;
-
-    /** @var int **/
-    protected $constitution = 0;
-
-    /** @var int **/
-    protected $intelligence = 0;
-
-    /** @var int **/
-    protected $wisdom = 0;
-
-    /** @var int **/
-    protected $charisma = 0;
+    /** @var AbilityScore[] */
+    protected $abilityScores;
 
     /** @var CharacterClass[] */
     protected $characterClasses = [];
@@ -52,6 +38,9 @@ class Character extends Model
     /** @var ProficiencyBonus[] */
     protected $proficiencyBonuses = [];
 
+    /** @var Dice[] */
+    protected $dice = [];
+
     public function getName(): ?string
     {
         return $this->name;
@@ -62,64 +51,18 @@ class Character extends Model
         $this->name = $name;
     }
 
-    public function getStrength(): int
+    public function addAbility(AbilityScore $abilityScore): void
     {
-        return $this->strength;
+        $this->abilityScores[$abilityScore->getAbility()] = $abilityScore;
     }
 
-    public function setStrength(int $strength): void
+    /**
+     * @param Abilities|int $ability
+     * @return AbilityScore|null
+     */
+    public function getAbility(int $ability): ?AbilityScore
     {
-        $this->strength = $strength;
-    }
-
-    public function getDexterity(): int
-    {
-        return $this->dexterity;
-    }
-
-    public function setDexterity(int $dexterity): void
-    {
-        $this->dexterity = $dexterity;
-    }
-
-    public function getConstitution(): int
-    {
-        return $this->constitution;
-    }
-
-    public function setConstitution(int $constitution): void
-    {
-        $this->constitution = $constitution;
-    }
-
-    public function getIntelligence(): int
-    {
-        return $this->intelligence;
-    }
-
-    public function setIntelligence(int $intelligence): void
-    {
-        $this->intelligence = $intelligence;
-    }
-
-    public function getWisdom(): int
-    {
-        return $this->wisdom;
-    }
-
-    public function setWisdom(int $wisdom): void
-    {
-        $this->wisdom = $wisdom;
-    }
-
-    public function getCharisma(): int
-    {
-        return $this->charisma;
-    }
-
-    public function setCharisma(int $charisma): void
-    {
-        $this->charisma = $charisma;
+        return $this->abilityScores[$ability] ?? null;
     }
 
     /**
@@ -225,5 +168,49 @@ class Character extends Model
     public function removeProficiencyBonus(ProficiencyBonus $proficiencyBonus): void
     {
         unset($this->proficiencyBonuses[$proficiencyBonus->getCode()]);
+    }
+
+    public function getArmorClass(): int
+    {
+        if (isset($this->abilityScores[Abilities::dexterity])) {
+            return self::ARMOR_CLASS + $this->abilityScores[Abilities::dexterity]->getModifier();
+        }
+
+        return self::ARMOR_CLASS;
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function rollInitiative(): int
+    {
+        if (isset($this->abilityScores[Abilities::dexterity])) {
+            return $this->roll(Dice::d20) + $this->abilityScores[Abilities::dexterity]->getModifier();
+        }
+
+        return $this->roll(Dice::d20);
+    }
+
+    public function getHitPoints(): int
+    {
+        $hitPoints = 0;
+
+        if ($this->characterClasses) {
+
+        }
+    }
+
+    /*
+     * Private
+     */
+    /**
+     * @param Dice|int $die
+     * @return int
+     * @throws Exception
+     */
+    public function roll(int $die): int
+    {
+        return random_int(1, $die);
     }
 }
