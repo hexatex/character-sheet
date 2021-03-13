@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Class Character
- * https://www.d12dungeonchronicles.com/post/dnd-5ed-character-sheets-fully-explained
- */
 class Character extends Model
 {
     const ARMOR_CLASS = 10;
@@ -196,6 +192,8 @@ class Character extends Model
     public function getHitPoints(): int
     {
         $hitPoints = (int)$this->characterClasses->max('getHitPoints');
+
+        // Todo, maybe get roll from characterClass in $character->initialRoll() an set in Character
 
         return $hitPoints;
     }

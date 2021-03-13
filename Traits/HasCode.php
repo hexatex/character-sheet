@@ -7,7 +7,7 @@ trait HasCode
 
     public function __construct()
     {
-        $this->code = uniqid();
+        $this->code = Str::uuid();
     }
 
     /*
