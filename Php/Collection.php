@@ -31,29 +31,31 @@ class Collection implements ArrayAccess, Countable, Iterator
 
     /**
      * @param string $accessor
+     * @param mixed ...$params
      * @return mixed|int|float
      */
-    public function min(string $accessor)
+    public function min(string $accessor, ...$params)
     {
-        $values = $this->pluckArray($accessor);
+        $values = $this->pluckArray($accessor, ...$params);
 
         return min($values, null);
     }
 
     /**
      * @param string $accessor
+     * @param mixed ...$params
      * @return mixed|int|float
      */
-    public function max(string $accessor)
+    public function max(string $accessor, ...$params)
     {
-        $values = $this->pluckArray($accessor);
+        $values = $this->pluckArray($accessor, ...$params);
 
         return max($values, null);
     }
 
-    public function pluck(string $accessor): Collection
+    public function pluck(string $accessor, ...$params): Collection
     {
-        $values = $this->pluckArray($accessor);
+        $values = $this->pluckArray($accessor, ...$params);
 
         return new Collection($values);
     }
@@ -124,11 +126,11 @@ class Collection implements ArrayAccess, Countable, Iterator
     /*
      * Private
      */
-    private function pluckArray(string $accessor): array
+    private function pluckArray(string $accessor, ...$params): array
     {
-        $values = new Collection;
+        $values = [];
         foreach ($this->arrayObject as $element) {
-            $values[] = $element->$accessor;
+            $values[] = $element->$accessor(...$params);
         }
 
         return $values;

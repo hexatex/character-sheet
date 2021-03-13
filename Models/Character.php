@@ -38,9 +38,6 @@ class Character extends Model
     /** @var ProficiencyBonus[] */
     protected $proficiencyBonuses = [];
 
-    /** @var Dice[] */
-    protected $dice = [];
-
     public function getName(): ?string
     {
         return $this->name;
