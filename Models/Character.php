@@ -14,8 +14,8 @@ class Character extends Model
     /** @var AbilityScore[] */
     protected $abilityScores;
 
-    /** @var CharacterClass[] */
-    protected $characterClasses = [];
+    /** @var CharacterClass[]|Collection|null */
+    protected $characterClasses;
 
     /** @var Race|null */
     protected $race;
@@ -70,17 +70,21 @@ class Character extends Model
      */
     public function getCharacterClasses(): array
     {
+        if ($this->characterClasses === null) {
+            $this->characterClasses = new Collection;
+        }
+
         return $this->characterClasses;
     }
 
     public function addCharacterClass(CharacterClass $characterClass): void
     {
-        $this->characterClasses[$characterClass->getCode()] = $characterClass;
+        $this->getCharacterClasses()[$characterClass->getCode()] = $characterClass;
     }
 
     public function removeCharacterClass(CharacterClass $characterClass): void
     {
-        unset($this->characterClasses[$characterClass->getCode()]);
+        unset($this->getCharacterClasses()[$characterClass->getCode()]);
     }
 
     public function getRace(): ?Race
@@ -194,11 +198,9 @@ class Character extends Model
 
     public function getHitPoints(): int
     {
-        $hitPoints = 0;
+        $hitPoints = (int)$this->characterClasses->max('getHitPoints');
 
-        if ($this->characterClasses) {
-
-        }
+        return $hitPoints;
     }
 
     /*
