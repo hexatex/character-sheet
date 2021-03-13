@@ -13,8 +13,6 @@ class AutoLoader
         // Models
         'Alignment' => __DIR__ . '/Models/Alignment.php',
         'ProficiencyBonus' => __DIR__ . '/Models/ProficiencyBonus.php',
-
-        // Contracts
         'Inspiration' => __DIR__ . '/Models/Inspiration.php',
         'Race' => __DIR__ . '/Models/Race.php',
         'AbilityScore' => __DIR__ . '/Models/AbilityScore.php',
@@ -26,7 +24,6 @@ class AutoLoader
 
         // Php
         'Collection' => __DIR__ . '/Php/Collection.php',
-        'README' => __DIR__ . '/README.md',
 
         // Abstracts
         'Enum' => __DIR__ . '/Abstracts/Enum.php',
@@ -41,7 +38,7 @@ class AutoLoader
             if ($filePath) {
                 require_once $filePath;
             } else {
-                throw new Exception("Failed to locate {$className} in AutoLoader.php");
+                throw new Exception("Failed to locate {$className} in AutoLoader");
             }
         });
     }
