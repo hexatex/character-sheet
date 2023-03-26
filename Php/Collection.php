@@ -57,7 +57,7 @@ class Collection implements ArrayAccess, Countable, Iterator
     {
         $values = $this->pluckArray($accessor, ...$params);
 
-        return new Collection($values);
+        return new static($values);
     }
 
     /*
